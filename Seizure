@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang='en'>
+<head>
+<title>Particle System</title>
+<meta charset='utf-8'>
+<style>
+canvas{
+		border: 1px solid black;
+	}
+</style>
+<script>
+var canvas;
+var context; 
+var particles; 
+var timer;
+var button; 
+
+function makeParticles(){
+	particles = [];
+	for(var i = 0; i < 50; i++){
+		particles.push(new Particle());
+	}
+}
+
+function degreesToRadians(degrees){
+	return(degrees * Math.PI)/180
+}
+
+function Particle(){
+	this.x = canvas.width/2;
+	this.y = canvas.height/2;
+	this.vx = Math.random() * 10-5;
+	this.vy = Math.random() * 10-5;
+	
+	//var colors = ['rgba(110, 200, 255, 1)', 'rgba(37, 200, 255, 0.8)', 'rgba(37, 255, 238, 0.8)']
+	var colors = ['red','yellow','blue','purple','green','rgba(255, 0, 255, 1)','rgba(110, 200, 255, 1)']
+	//var shapes = ['circle', 'square',]
+	this.color = colors[Math.floor(Math.random() * colors.length)];
+	//this.shape = shapes[Math.floor(Math.random()* shapes.length)];
+	this.radius = 30;
+}
+
+function moveParticles(){
+	context.globalCompositeOperation = 'source-in';
+	context.fillStyle = 'rgba(0, 0, 0, 0)';
+	context.fillRect(0,0, canvas.width, canvas.height);
+	
+	context.globalCompositeOperation = 'lighter'; 
+	for(var i=0; i < particles.length; i++){
+		var p = particles[i];
+		context.beginPath();
+		context.arc(p.x, p.y, p.radius, 0, degreesToRadians(360), true);
+		context.fillStyle = p.color;
+		context.fill();
+		
+		var width = Math.floor(Math.random() * 40);
+		var x = Math.floor(Math.random() * canvas.width);
+		var y = Math.floor(Math.random() * canvas.height);
+		context.fillRect(x,y, width, width);
+		context.fillStyle = p.color;
+		context.fill();
+		
+		
+
+		context.moveTo(207,207);
+		context.lineTo(272,207);
+		context.moveTo(272,207);
+		context.lineTo(236,153);
+		context.moveTo(236,153);
+		context.lineTo(207,207);
+		context.moveTo(207,207);
+		context.lineTo(207,207);
+				
+				
+		context.moveTo(468,285);
+		context.lineTo(435,323);
+		context.moveTo(435,323);
+		context.lineTo(407,267);
+		context.moveTo(407,267);
+		context.lineTo(468,285);
+		context.moveTo(468,285);
+		context.lineTo(468,285);
+
+		context.moveTo(32,45);
+		context.lineTo(65,9);
+		context.moveTo(65,9);
+		context.lineTo(80,50);
+		context.moveTo(80,51);
+		context.lineTo(32,45);
+		context.moveTo(32,45);
+		context.lineTo(32,45);
+
+		context.moveTo(66,292);
+		context.lineTo(100,317);
+		context.moveTo(101,317);
+		context.lineTo(116,256);
+		context.moveTo(116,256);
+		context.lineTo(66,292);
+
+
+		context.moveTo(334,60);
+		context.lineTo(362,10);
+		context.moveTo(362,10);
+		context.lineTo(391,52);
+		context.moveTo(391,52);
+		context.lineTo(334,60);
+
+		context.moveTo(255,316);
+		context.lineTo(255,316);
+		context.moveTo(225,364);
+		context.lineTo(282,299);
+		context.moveTo(282,299);
+		context.lineTo(302,337);
+		context.moveTo(302,337);
+		context.lineTo(225,364);
+		context.moveTo(225,364);
+		context.lineTo(225,364);
+		context.fillStyle = p.color;
+		context.stroke(); 
+		
+
+
+    
+    
+		
+		p.x += p.vx;
+		p.y += p.vy;
+		
+		if(p.x < -50) p.x = canvas.width + 50;
+		if(p.y < -50) p.y = canvas.height + 50;
+		if(p.x > canvas.width + 50) p.x = -50;
+		if(p.y > canvas.height + 50) p.y = -50;
+		
+		//if(p.radius > 0) p.radius--;
+	}
+}
+
+
+ 
+window.onload = function(){
+	canvas = document.getElementById('canvas')
+	context = canvas.getContext('2d');
+	makeParticles();
+	timer = setInterval(moveParticles, 50);
+	//timer = setInterval(makeParticles, 4500);
+}
+	
+</script>
+</head>
+<body>
+	<canvas id='canvas' width='500' height='400'></canvas>
+	<form>
+	<input type='button' id='uselessButton' value='This button does not actually do anything but you can click it anyway'>
+	</form>
+</body>
+</html>
