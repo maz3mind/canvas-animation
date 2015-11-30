@@ -1,156 +1,152 @@
 <!doctype html>
-<html lang='en'>
+<html>
 <head>
-<title>Project 3</title>
-<meta charset='utf-8'>
-<style>
-canvas{
-		border: 1px solid black;
-	}
-</style>
+<title>Responsive Interactive Canvas</title>
 <script>
-var canvas;
-var context; 
-var particles; 
-var timer;
-var button; 
-
-function makeParticles(){
-	particles = [];
-	for(var i = 0; i < 50; i++){
-		particles.push(new Particle());
-	}
-}
-
-function degreesToRadians(degrees){
-	return(degrees * Math.PI)/180
-}
-
-function Particle(){
-	this.x = canvas.width/2;
-	this.y = canvas.height/2;
-	this.vx = Math.random() * 10-5;
-	this.vy = Math.random() * 10-5;
+	  var canvas;
+	  var context;
+	  var shapes = []
+	  var timer;
+	  var timerTwo;
+	  var possibleShapes = ['diamond','square','circle','star','heart'];
+	  function Shape(x, y, color) {
+		this.x = canvas.width/2;
+		this.y = canvas.height/2;
+		this.size = Math.random()*20+5;
+		this.dx = Math.random()*10-5;
+		this.dy = Math.random()*10-5;
+		this.color = color;
+		this.shape = possibleShapes[Math.floor(Math.random()*possibleShapes.length)];
+	  }
+      function init() {
+        canvas = document.getElementById('canvas');
+        context = canvas.getContext("2d");
 	
-	//var colors = ['rgba(110, 200, 255, 1)', 'rgba(37, 200, 255, 0.8)', 'rgba(37, 255, 238, 0.8)']
-	var colors = ['red','yellow','blue','purple','green','rgba(255, 0, 255, 1)','rgba(110, 200, 255, 1)']
-	//var shapes = ['circle', 'square',]
-	this.color = colors[Math.floor(Math.random() * colors.length)];
-	//this.shape = shapes[Math.floor(Math.random()* shapes.length)];
-	this.radius = 30;
-}
-
-function moveParticles(){
-	context.globalCompositeOperation = 'source-in';
-	context.fillStyle = 'rgba(0, 0, 0, 0)';
-	context.fillRect(0,0, canvas.width, canvas.height);
-	
-	context.globalCompositeOperation = 'lighter'; 
-	for(var i=0; i < particles.length; i++){
-		var p = particles[i];
-		context.beginPath();
-		context.arc(p.x, p.y, p.radius, 0, degreesToRadians(360), true);
-		context.fillStyle = p.color;
-		context.fill();
-		
-		var width = Math.floor(Math.random() * 40);
-		var x = Math.floor(Math.random() * canvas.width);
-		var y = Math.floor(Math.random() * canvas.height);
-		context.fillRect(x,y, width, width);
-		context.fillStyle = p.color;
-		context.fill();
-		
-		
-
-		context.moveTo(207,207);
-		context.lineTo(272,207);
-		context.moveTo(272,207);
-		context.lineTo(236,153);
-		context.moveTo(236,153);
-		context.lineTo(207,207);
-		context.moveTo(207,207);
-		context.lineTo(207,207);
-				
-				
-		context.moveTo(468,285);
-		context.lineTo(435,323);
-		context.moveTo(435,323);
-		context.lineTo(407,267);
-		context.moveTo(407,267);
-		context.lineTo(468,285);
-		context.moveTo(468,285);
-		context.lineTo(468,285);
-
-		context.moveTo(32,45);
-		context.lineTo(65,9);
-		context.moveTo(65,9);
-		context.lineTo(80,50);
-		context.moveTo(80,51);
-		context.lineTo(32,45);
-		context.moveTo(32,45);
-		context.lineTo(32,45);
-
-		context.moveTo(66,292);
-		context.lineTo(100,317);
-		context.moveTo(101,317);
-		context.lineTo(116,256);
-		context.moveTo(116,256);
-		context.lineTo(66,292);
-
-
-		context.moveTo(334,60);
-		context.lineTo(362,10);
-		context.moveTo(362,10);
-		context.lineTo(391,52);
-		context.moveTo(391,52);
-		context.lineTo(334,60);
-
-		context.moveTo(255,316);
-		context.lineTo(255,316);
-		context.moveTo(225,364);
-		context.lineTo(282,299);
-		context.moveTo(282,299);
-		context.lineTo(302,337);
-		context.moveTo(302,337);
-		context.lineTo(225,364);
-		context.moveTo(225,364);
-		context.lineTo(225,364);
-		context.fillStyle = p.color;
-		context.stroke(); 
-		
-
-
-    
-    
-		
-		p.x += p.vx;
-		p.y += p.vy;
-		
-		if(p.x < -50) p.x = canvas.width + 50;
-		if(p.y < -50) p.y = canvas.height + 50;
-		if(p.x > canvas.width + 50) p.x = -50;
-		if(p.y > canvas.height + 50) p.y = -50;
-		
-		//if(p.radius > 0) p.radius--;
-	}
-}
-
-
  
-window.onload = function(){
-	canvas = document.getElementById('canvas')
-	context = canvas.getContext('2d');
-	makeParticles();
-	timer = setInterval(moveParticles, 50);
-	//timer = setInterval(makeParticles, 4500);
-}
+        window.addEventListener('resize', resizeCanvas, false);
+        window.addEventListener('orientationchange', resizeCanvas, false);
+        resizeCanvas();
+		canvas.onclick = function(event) {
+			handleClick(event.clientX, event.clientY);
+		};
+		timer = setInterval(resizeCanvas, 20);
+		timerTwo = setInterval(newShape, 200);
+      }
+	  function newShape() {
+		var x = Math.random() * canvas.width;
+		var y = Math.random() * canvas.height;
+		var colors = ["rgb(255,137,97)", "rgb(136,255,97)", "rgb(97,215,255)", "rgb(255,187,97)", "rgb(216,97,255)", "rgb(255,252,97)"];
+		var color = colors[Math.floor(Math.random()*colors.length)];
+		shapes.push(new Shape(x, y, color));
 	
+		
+	  }
+	  function drawCircle(circle) {
+		 context.beginPath();
+		 context.arc(circle.x, circle.y, circle.size, 0, degreesToRadians(360), true);
+		 context.fillStyle = circle.color;
+		 context.fill();
+		 context.globalCompositeOperation = 'source-in';
+		 context.globalCompositeOperation = 'lighter'; 
+	  }
+	  function drawSquare(square) {
+		context.beginPath();
+		context.fillStyle = square.color;
+		context.fillRect(square.x, square.y, square.size, square.size);
+		context.globalCompositeOperation = 'source-in';
+		context.globalCompositeOperation = 'lighter'; 
+      }	 
+
+	    function drawStar(star){
+    	context.beginPath();
+		context.moveTo(star.x, star.y);
+		context.lineTo(star.x+33.4, star.y+67.5);
+		context.lineTo(star.x+107.9, star.y+78.3);
+		context.lineTo(star.x+54, star.y+130.9);
+		context.lineTo(star.x+66.7, star.y+205.1);
+		context.lineTo(star.x, star.y+170.1);
+		context.lineTo(star.x-66.6, star.y+205.1);
+		context.lineTo(star.x-53.9, star.y+130.9);
+		context.lineTo(star.x-107.8, star.y+78.3);
+		context.lineTo(star.x-33.3, star.y+67.5);
+		context.lineTo(star.x,star.y);
+		context.closePath();
+		context.fillStyle = star.color;
+		context.fill();
+		context.globalCompositeOperation = 'source-in';
+		context.globalCompositeOperation = 'lighter'; 
+	}
+		function drawHeart(heart) {
+		context.beginPath();
+		context.moveTo(heart.x, heart.y);
+		context.bezierCurveTo(heart.x, heart.y-3, heart.x-5, heart.y-15, heart.x-25, heart.y-15);
+		context.bezierCurveTo(heart.x-55, heart.y-15, heart.x-55, heart.y+22.5, heart.x-55, heart.y+22.5);
+		context.bezierCurveTo(heart.x-55, heart.y+40, heart.x-35, heart.y+62, heart.x, heart.y+80);
+		context.bezierCurveTo(heart.x+35, heart.y+62, heart.x+55, heart.y+40, heart.x+55, heart.y+22.5);
+		context.bezierCurveTo(heart.x+55, heart.y+22.5, heart.x+55, heart.y-15, heart.x+25, heart.y-15);
+		context.bezierCurveTo(heart.x+10, heart.y-15, heart.x, heart.y-3, heart.x, heart.y);
+		context.closePath();
+		context.fillStyle = heart.color;
+		context.fill();
+		context.globalCompositeOperation = 'source-in';
+		context.globalCompositeOperation = 'lighter'; 
+	  }
+	  function drawDiamond(diamond) {
+		     
+             context.beginPath();
+             context.moveTo(diamond.x,diamond.y);
+             context.lineTo(diamond.x+75, diamond.y+100);
+             context.lineTo(diamond.x, diamond.y+200);
+             context.lineTo(diamond.x-75, diamond.y+100);
+                              
+             context.closePath();
+             context.fillStyle = diamond.color;
+             context.fill();
+			 context.globalCompositeOperation = 'source-in';
+			 context.globalCompositeOperation = 'lighter'; 
+	  }
+      function resizeCanvas() {
+        canvas.width = window.innerWidth-20;
+        canvas.height = window.innerHeight-20;
+		fillBackgroundColor();
+		for (var i=0; i<shapes.length; i++) {
+			if (shapes[i].shape == 'square') {
+				drawSquare(shapes[i]);
+			} else if (shapes[i].shape == 'circle') {
+				drawCircle(shapes[i]);
+			} else if (shapes[i].shape == 'diamond') {
+				drawDiamond(shapes[i]);
+			} else if (shapes[i].shape == 'star') {
+				drawStar(shapes[i]);
+			} else if (shapes[i].shape == 'heart') {
+				drawHeart(shapes[i]);
+			}
+				
+			if (shapes[i].x + shapes[i].dx > canvas.width || shapes[i].x + shapes[i].dx < 0)
+				shapes[i].dx = -shapes[i].dx;
+			if (shapes[i].y + shapes[i].dy > canvas.height || shapes[i].y + shapes[i].dy < 0)
+				shapes[i].dy = -shapes[i].dy;
+				shapes[i].x += shapes[i].dx;
+				shapes[i].y += shapes[i].dy;
+		}
+		//drawText();		 
+      }
+	  function fillBackgroundColor() {
+		 //var colors = ["white", "yellow", "blue", "red"];
+		 //var bgColor = colors[Math.floor(Math.random() * colors.length)];
+		 context.fillStyle = 'black';
+		 context.fillRect(0, 0, canvas.width, canvas.height);
+	}
+	function degreesToRadians(degrees) {
+		//converts from degrees to radians and returns
+		return (degrees * Math.PI)/180;
+	}
+	window.onload = init;
 </script>
 </head>
 <body>
-	<canvas id='canvas' width='500' height='400'></canvas>
-	<form>
+<canvas id='canvas' width=500 height=500></canvas>
+<form>
 	<input type='button' id='uselessButton' value='This button does not actually do anything but you can click it anyway'>
 	</form>
-</body>
-</html>
+</body>	  
